@@ -1,0 +1,16 @@
+{%extends 'ttrade/base.html'%}
+{% load crispy_forms_tags %}
+{% block title %}
+    Add Favor
+{% endblock %}
+{% block content %}
+<style>
+  h1{font-size:50px; font-family: 'Courgette', cursive;}
+</style>
+    {% if object %}
+        <h1>Update {{object.title}}</h1>
+    {% else %}
+        <h1>Add a New Favor</h1>
+    {% endif %}
+    {% crispy form %}
+{% endblock %}

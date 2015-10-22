@@ -1,0 +1,257 @@
+{% load staticfiles %}
+{% load bootstrap3 %}
+<html>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<link href='https://fonts.googleapis.com/css?family=Righteous|Courgette|Poiret+One|Lora' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" type="text/css" href="{% static 'ttrade/base.css' %}" />
+<head>
+  {% bootstrap_css %}
+  {% bootstrap_javascript jquery=1%}
+  <title>
+      {% block title %}
+          Placeholder Title
+      {% endblock %}
+  </title>
+  <link rel="shortcut icon" href="{% static 'ttrade/media/favicon.ico' %}" type="image/x-icon">
+  <link rel="icon" href="{% static 'ttrade/media/favicon.ico' %}" type="image/x-icon">
+  <script src="content/js/jquery.min.js"></script>
+  <script src="content/js/bootstrap.min.js"></script>
+  <style>
+    body{background-color:transparent;}
+    bar {justify-content: space-around;}
+  </style>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.14.30/js/bootstrap-datetimepicker.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.14.30/css/bootstrap-datetimepicker.min.css">
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+  <script type="text/javascript">
+    $(document).ready(function() {
+        jQuery.ajaxSettings.traditional = true; //Important 
+        
+        /*Important functions to enable CSRF token as Django requires it*/
+        function getCookie(name) {
+            var cookieValue = null;
+            var i = 0;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (i; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        var csrftoken = getCookie('csrftoken');
+    
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+        /*end CSRF token */
+    
+        /*Setting the format of the datepicker and datetimepicker*/
+        $('.dateinput').datepicker({
+            format: "yyyy/mm/dd"
+        });
+        $('.datetimeinput').datetimepicker({
+            format: "YYYY-MM-DD HH:mm"
+        });
+    
+        $('.createtag').click(function(e) {
+            formid = $(this).parent().attr("id"); //find the formid of the button pressed via parent 
+            
+            $.ajax({
+                type: "POST",
+                url: "/add/request/",
+                dataType: "json",
+                data: {
+                    "title": $("#" + formid + " #id_title").val(),
+                    "form": $("#" + formid).serialize(),
+                },
+                success: function(data) {
+                    if (data.status == 1){
+                        $('#mymessage').html("")
+                        //Populate the dropdown list with all the folders returned in json
+                        var $el = $("#id_tag");
+                        $el.empty(); // remove old options
+                        $.each(data.message, function(key, value) {
+                            $el.append($("<option></option>").attr("value", value.id).text(value.title));
+                        });
+                    }
+                    else{
+                        $('#mymessage').html("<p>New tag creation error</p>"+data.message)
+                    }
+                },
+                crossDomain: false, // obviates need for sameOrigin test
+                beforeSend: function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type)) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                }
+            });
+        });
+        
+
+        
+        $('.btn.createrequest').click(function(e) {
+            formid = $(this).parent().attr("id"); //find the formid of the button pressed via parent 
+    
+            $.ajax({
+                type: "POST",
+                url: "/add/request/",
+                dataType: "json",
+                data: {
+                     "title": $("#" + formid + " #id_title").val(),
+                     "user": $("#" + formid + " #id_user").val(),
+                     "content": $("#" + formid + " #id_content").val(),
+                     "time": $("#" + formid + " #id_time").val(),
+                     "recur": $("#" + formid + " id_recur").val(),
+                     "date": $("#" + formid + " id_date").val(),
+                     "day": $("#" + formid + "id_day").val(),
+                     "other": $("#" + formid + "id_other").val(),
+                     "tag": $("#" + formid + " #id_tag").val(),                
+                     "form": $("#" + formid).serialize(),
+                },
+                success: function(data) {
+                    $('#mymessage').html("")
+                    if (data.status == 1){ //if there are no errors
+                        
+                        //http://stackoverflow.com/questions/503093/how-can-i-make-a-redirect-page-using-jquery
+                        window.location.replace("/requestlist/") //to redirect to another page
+                    }
+                    else{
+                        $('#mymessage').html(data.message)
+                    }
+                },
+                crossDomain: false, // obviates need for sameOrigin test
+                beforeSend: function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type)) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                }
+            });
+        });
+        
+        $('.btn.createfavor').click(function(e) {
+            formid = $(this).parent().attr("id"); //find the formid of the button pressed via parent 
+    
+            $.ajax({
+                type: "POST",
+                url: "/add/favor/",
+                dataType: "json",
+                data: {
+                     "title": $("#" + formid + " #id_title").val(),
+                     "user": $("#" + formid + " #id_user").val(),
+                     "content": $("#" + formid + " #id_content").val(),
+                     "form": $("#" + formid).serialize(),
+                },
+                success: function(data) {
+                    $('#mymessage').html("")
+                    if (data.status == 1){ //if there are no errors
+                        
+                        //http://stackoverflow.com/questions/503093/how-can-i-make-a-redirect-page-using-jquery
+                        window.location.replace("/favorlist/") //to redirect to another page
+                    }
+                    else{
+                        $('#mymessage').html(data.message)
+                    }
+                },
+                crossDomain: false, // obviates need for sameOrigin test
+                beforeSend: function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type)) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                }
+            });
+        });
+        
+        /* To reset the modal input fields when modal is closed.*/
+        $('#myModal').on('hidden.bs.modal', function(){
+            $(this).find('form')[0].reset();
+        });
+    });
+</script>
+</head>
+
+<body>
+    <div class="container">
+      <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="/dashboard">TICK4TOCK</a>
+          </div>
+            <ul class="nav navbar-nav navbar-right" id='bar'>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    {%if user.is_authenticated%}
+                      <img src="/media/{{user.profile.picture}}" style="height:30px; width:30px;" />
+                      Hi {{user.username}}!
+                    {%else%}
+                      Login/Register here!
+                    {%endif%}
+                <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    {%if user.is_authenticated%}
+                      <li><a href="/accounts/logout">Logout</a></li>
+                    {%else%}
+                      <li><a href="/accounts/login">Login</a></li>
+                      <li><a href="/accounts/register">Register</a></li>
+                    {%endif%}
+                </ul>
+              </li>
+            </ul>
+        </div><!--/.container-fluid -->
+      </nav>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-3">
+          <div class="well well-lg">
+            <ul class="nav nav-stacked">
+              <li><a href="/dashboard">Dashboard</a></li>
+              <li><a href="/requestlist">Requests</a></li>
+              <li><a href="/favorlist">Favors</a></li>
+              <li><a href="/favorlistall">All Favors</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-xs-6">
+          <div class="well well-lg">
+            <ul class="nav nav-stacked">
+              {% block content %}
+  	            Placeholder Content
+              {% endblock %}
+            </ul>
+          </div>
+        </div>
+        <div class="col-xs-3">
+          <div class="well well-lg">
+            <ul class="nav nav-stacked">
+              <li><a href="/add/request">Add Requests</a></li>
+              <li><a href="/add/favor">Add Favors</a></li>
+              <li><a href="#">Contact Us</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      $("th").addClass("col-xs-6");
+    </script>
+</body>
+<footer class="footer">
+    <div class="container" id="footer"><div class="row">
+        <div class="col-xs-3 col-xs-offset-9" style="text-align:right">
+            Made by Marcus Low and Fan Sicheng<br>
+            <span class="glyphicon glyphicon-copyright-mark"></span>
+            2015 TICK4TOCK
+        </div></div>
+    </div></div>
+</footer>
+</html>

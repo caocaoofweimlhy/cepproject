@@ -1,0 +1,24 @@
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+<head>
+  <title>
+    {%block title%}
+      To be replaced by actual title
+    {%endblock%}
+  </title>
+</head>
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery=1%}
+{%load staticfiles%}
+<link rel="icon" href="{% static 'timetable/media/favicon.png' %}">
+<link href='http://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" type="text/css" href="{% static 'mcdelivery/accounts.css' %}">
+</head>
+<body>
+{%block content%}
+  To be replaced by actual content
+{%endblock%}
+</body>

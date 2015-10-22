@@ -1,0 +1,33 @@
+{%extends 'ttrade/base.html'%}
+{% load crispy_forms_tags %}
+{% block title %}
+    Add Request
+{% endblock %}
+{% block content %}
+<style>
+  h1{font-size:50px; font-family: 'Courgette', cursive;}
+</style>
+<div id="mymessage" class="form-group alert-danger"></div>
+<h1>Create a New Request</h1>
+  {% if createrequest_form %}
+    {% crispy createrequest_form %}
+  {% endif %}
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Create New Tag</h4>
+        </div>
+        <div class="modal-body">
+          {% if createtag_form %} 
+            {% crispy createtag_form %} 
+          {%endif%}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{%endblock%}

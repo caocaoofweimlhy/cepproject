@@ -1,0 +1,50 @@
+{%extends 'ttrade/base.html'%}
+{%load staticfiles%}
+{%load bootstrap3%}
+{% block title %}
+Dashboard
+{% endblock %}
+{% block content %}
+<style>
+    a{
+        text-decoration:none;
+        color:black;
+    }
+</style>
+<table class="table table-user-info">
+    <tbody>
+        <tr>
+            <th>User Name:</th>
+            <td>{{user.username}}</td>
+        </tr>
+        <tr>
+            <th>Email:</th>
+            <td>{{user.email}}</td>
+        </tr>
+        <tr>
+            <th>Karma:</th>
+            <td>{{user.profile.karma}}</td>
+        </tr>
+        <tr>
+            <th>Address:</th>
+            <td>{{user.profile.address}}</td>
+        </tr>
+        <tr>
+            <th>Age:</th>
+            <td>{{user.profile.age}}</td>
+        </tr>
+        <tr>
+            <th>Contact:</th>
+            <td>{{user.profile.contact}}</td>
+        </tr>
+        <tr>
+            <th>Time Points:</th>
+            <td>{{user.profile.timepoint}}</td>
+        </tr>
+        <tr>
+            <th><a href="../accepted/{{ user.id }}">Accepted Requests</a></th>
+            <th><a href="../posted/{{ user.id }}">Posted Requests</a></th>
+        </tr>
+    </tbody>
+</table>
+{% endblock %}

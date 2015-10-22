@@ -1,0 +1,93 @@
+{%extends 'ttrade/base.html'%}
+{% block title %}
+    Request - {{object.title}}
+{% endblock %}
+{% block content %}
+    <script>
+        $(document).ready(function() {
+           $("#acceptRequest").click(function() {
+               var targetContent = "{{object.id}}";
+               var targetUser = "{{object.user}}";
+               var targetDuration = "{{object.duration}}";
+               $.get("/acceptRequest/", {
+                   targetUser: targetUser,
+                   targetContent: targetContent,
+                   targetDuration: targetDuration,
+               }, function() {
+                   window.location.reload(false);
+               });
+           }) ;
+        });
+    </script>
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Title</th><td>{{object.title}}</td>
+            </tr>
+            <tr>
+                <th>User</th><td><a href="../user/{{ object.user.id }}"><img src="/media/{{object.user.picture}}" style="height:30px; width:30px;" %} /></a>{{object.user}}</td>
+            </tr>
+            <tr>
+                <th>Karma</th><td>{{object.user.karma}}</td>
+            </tr>
+            <tr>
+                <th>Content</th><td>{{object.content}}</td>
+            </tr>
+            <tr>
+                <th>Time</th><td>{{object.time}}</td>
+            </tr>
+            <tr>
+                <th>Recurring</th>
+                {% if object.recur == True %}
+                <td>Yes</td>
+                {% else %}
+                <td>No</td>
+                {% endif %}
+            </tr>
+            <tr>
+                <th>Date</th><td>{{object.date}}</td>
+            </tr>
+            <tr>
+                <th>Day</th><td>{{object.day}}</td>
+            </tr>
+            <tr>
+                <th>Other</th><td>{{object.other}}</td>
+            </tr>
+            {% if object.accepted == True %}
+            <tr>
+                <th>Accepted</th><td>Yes</td>
+            </tr>
+            {% else %}
+            <tr>
+                <th>Accepted</th><td>No</td>
+            </tr>
+            {% endif %}
+            <tr>
+                <th>Accepted by</th><td>{{object.acceptor}}</td>
+            </tr>
+            <tr>
+                <th>Duration</th><td>{{object.duration}}</td>
+            </tr>
+            <tr>
+                <th>Location</th><td>{{object.location}}</td>
+            </tr>
+            <tr>
+                <th>Tag(s):</th>
+                <td>
+                    <ul>
+                        {% for t in object.tag.all %}
+                            <li>{{t.title}}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+<a href="{{object.id}}/edit"><button type="button" class="btn btn-primary">
+    Edit
+</button></a>
+<button type="button" class="btn btn-primary" id="acceptRequest">Accept</button>
+<a href="{{object.id}}/delete"><button type="button" class="btn btn-primary">
+    Delete
+</button></a>
+{%endblock%}

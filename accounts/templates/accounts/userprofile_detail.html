@@ -1,0 +1,69 @@
+{%extends 'ttrade/base.html'%}
+{%load staticfiles%}
+{%load bootstrap3%}
+{% block title %}
+    {{ object.user.username }}
+{% endblock %}
+{% block content %}
+<script>
+    $(document).ready(function() {
+        $('#karmaup').click(function(){
+            var targetUsername = "{{object.user.username}}";
+            $.get("/accounts/karmaup/", {
+                'target': targetUsername,
+                'change': 1,
+            }, function(ret) {
+                window.location.reload();
+            });
+        });
+        
+        $('#karmadown').click(function(){
+            var targetUsername = "{{object.user.username}}";
+            $.get("/accounts/karmadown/", {
+                'target': targetUsername,
+                'change': -1,
+            }, function(ret) {
+                window.location.reload();
+            });
+        });
+        
+    });
+</script>
+<div style="text-align:center">
+    <img src="/media/{{object.user.profile.picture}}" style="height:300px; width:300px;" %} />
+</div><br>
+<table class="table table-user-info">
+    <tbody>
+        <tr>
+            <th>User Name:</th>
+            <td>{{object.user.username}}</td>
+        </tr>
+        <tr>
+            <th>Email:</th>
+            <td>{{object.user.email}}</td>
+        </tr>
+        <tr>
+            <th>Karma:</th>
+            <td>{{object.user.profile.karma}}</td>
+        </tr>
+        <tr>
+            <th>Address:</th>
+            <td>{{object.user.profile.address}}</td>
+        </tr>
+        <tr>
+            <th>Age:</th>
+            <td>{{object.user.profile.age}}</td>
+        </tr>
+        <tr>
+            <th>Contact:</th>
+            <td>{{object.user.profile.contact}}</td>
+        </tr>
+        <tr>
+            <th>Time Points:</th>
+            <td>{{object.user.profile.timepoint}}</td>
+        </tr>
+    </tbody>
+</table>
+<button type="button" class="btn btn-primary" id="karmaup">+Karma</button>
+<button type="button" class="btn btn-primary" id="karmadown">-Karma</button>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'ttrade/base.html' %}
+{% load staticfiles %}
+{% load bootstrap3 %}
+{% block title %}
+    Favors
+{% endblock %}
+{% block content %}
+    <div>
+        {% if object_list  %}
+            {% for favor in object_list  %}
+            <li><a href={%url 'detailf' favor.id %}>
+                <table class="table">
+                    <thead>
+                      <tr>
+                        <th>{{favor.id}}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th>User</th><td><img src="/media/{{favor.user.picture}}" style="height:30px; width:30px;" %} />{{favor.user}}</td>
+                      </tr>
+                      <tr>
+                        <th>Content</th><td>{{favor.content}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+            </a></li>
+            {% endfor %}
+          </div>
+    {% else %}
+        <p>No favors are available.</p>
+    {% endif %}
+{% endblock %}
